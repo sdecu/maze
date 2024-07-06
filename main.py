@@ -2,10 +2,6 @@ from tkinter import Tk, BOTH, Canvas
 
 def main():
     win = Window(800, 600)
-    start_point = Point(100, 150)
-    end_point = Point(300, 350)
-    line = Line(start_point, end_point)
-    win.draw_line(line, "red")
     win.wait_for_close()
 
 class Window:
@@ -51,39 +47,33 @@ class Line:
         )
 
 class Cell:
-    def __init__(self, canvas, topx, bottomx, lefty, righty):
+    def __init__(self, win):
         self.has_left_wall = True
         self.has_right_wall= True
         self.has_top_wall = True
         self.has_bottom_wall = True
-        self._x1 = topx
-        self._x2 = bottomx
-        self._y1 = lefty
-        self._y2 = righty
-        self._win = canvas
+        self._x1 = None
+        self._x2 = None
+        self._y1 = None
+        self._y2 = None
+        self._win = win
 
-        def draw(self, topx, lefty, bottomx, righty):
-            if self.has_left_wall:
-                start_point = Point(self._x1, self._y1)
-                end_point = Point(self._x2, self._y1)
-                line = Line(start_point, end_point)
-                self._win.draw(line, "red")
+    def draw(self, x1, y1, x2, y2):
+        self._x1 = x1
+        self._x2 = x2
+        self._y1 = y1
+        self._y2 = y2
+        if self.has_left_wall:
+            line = Line(Point(x1, y1), Point(x1, y2))
+            self._win.draw_line(line)
+        if self.has_top_wall:
+            line = Line(Point(x1, y1), Point(x2, y1))
+            self._win.draw_line(line)
+        if self.has_right_wall:
+            line = Line(Point(x2, y1), Point(x2, y2))
+            self._win.draw_line(line)
+        if self.has_bottom_wall:
+            line = Line(Point(x1, y2), Point(x2, y2))
+            self._win.draw_line(line)
 
-            if self.has_right_wall:
-                start_point = Point(self._x1, self._y2)
-                end_point = Point(self._x2, self._y2)
-                line = Line(start_point, end_point)
-                self._win.draw(line, "red")
-
-            if self.has_top_wall:
-                start_point = Point(self._x1, self._y1)
-                end_point = Point(self._x1, self._y2)
-                line = Line(start_point, end_point)
-                self._win.draw(line, "red")
-
-            if self.has_bottom_wall:
-                start_point = Point(self._x, self._y1)
-                end_point = Point(self._x2, self._y1)
-                line = Line(start_point, end_point)
-                self._win.draw(line, "red")
-main()
+    main()
